@@ -1,0 +1,34 @@
+# Command
+# - 실행: docker-compose -f docker/local/docker-compose.yaml -p hydrangea up -d
+# - 중지: docker-compose -f docker/local/docker-compose.yaml -p hydrangea stop
+# - 삭제: docker-compose -f docker/local/docker-compose.yaml -p hydrangea down --volumes
+# Note
+# - MongoDB 접근 시 인증 데이터베이스를 admin으로 설정 또는 "mongodb://hydrangea:hydrangea@localhost:27017/hydrangea?authSource=admin" 사용
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: hydrangea-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: hydrangea
+      MONGO_INITDB_ROOT_PASSWORD: hydrangea
+      MONGO_INITDB_DATABASE: hydrangea
+    volumes:
+      - mongodb-data:/data/db
+  postgresql:
+    image: postgres:16
+    container_name: hydrangea-postgresql
+    environment:
+      POSTGRES_USER: hydrangea
+      POSTGRES_PASSWORD: hydrangea
+      POSTGRES_DB: hydrangea
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  mongodb-data:
+  postgresql-data:

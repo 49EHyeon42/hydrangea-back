@@ -1,0 +1,25 @@
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://hydrangea:hydrangea@localhost:27017/hydrangea
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hydrangea
+    username: hydrangea
+    password: hydrangea
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+    show_sql: true

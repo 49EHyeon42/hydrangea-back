@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: hydrangea
+  profiles:
+    active: local
