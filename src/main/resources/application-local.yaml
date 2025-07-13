@@ -10,7 +10,7 @@ logging:
 spring:
   data:
     mongodb:
-      uri: mongodb://hydrangea:hydrangea@localhost:27017/hydrangea
+      uri: mongodb://hydrangea:hydrangea@localhost:27017/hydrangea?authSource=admin
   datasource:
     url: jdbc:postgresql://localhost:5432/hydrangea
     username: hydrangea
