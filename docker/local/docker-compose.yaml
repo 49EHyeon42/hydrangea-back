@@ -28,7 +28,16 @@ services:
       - "5432:5432"
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+  redis:
+    image: redis:8
+    container_name: hydrangea-redis
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--requirepass", "hydrangea" ]
+    volumes:
+      - redis-data:/data
 
 volumes:
   mongodb-data:
   postgresql-data:
+  redis-data:
