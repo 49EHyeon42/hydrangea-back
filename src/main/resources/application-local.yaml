@@ -11,15 +11,24 @@ spring:
   data:
     mongodb:
       uri: mongodb://hydrangea:hydrangea@localhost:27017/hydrangea?authSource=admin
+    redis:
+      host: localhost
+      port: 6379
+      password: redis
   datasource:
     url: jdbc:postgresql://localhost:5432/hydrangea
     username: hydrangea
     password: hydrangea
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
     show_sql: true
+
+token:
+  access-token:
+    name: accessToken
+    expiration-seconds: 86400

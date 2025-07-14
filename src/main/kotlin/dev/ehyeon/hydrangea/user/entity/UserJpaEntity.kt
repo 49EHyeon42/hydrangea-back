@@ -16,6 +16,12 @@ class UserJpaEntity(
     val id: Long? = null,
 
     @Column(nullable = false, length = 32)
+    val username: String,
+
+    @Column(nullable = false, length = 60)
+    val hashedPassword: String,
+
+    @Column(nullable = false, length = 32)
     val nickname: String,
 ) {
     @CreatedDate
