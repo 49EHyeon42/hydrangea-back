@@ -2,6 +2,7 @@ package dev.ehyeon.hydrangea.common.configuration
 
 import dev.ehyeon.hydrangea.common.constant.Environment
 import dev.ehyeon.hydrangea.common.filter.AuthenticationFilter
+import dev.ehyeon.hydrangea.common.property.CorsProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -13,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration
 
 @Configuration
 class SecurityConfiguration(
+    private val corsProperty: CorsProperty,
     private val authenticationFilter: AuthenticationFilter,
 ) {
     @Bean
@@ -23,8 +25,7 @@ class SecurityConfiguration(
                 cors.configurationSource {
                     val corsConfiguration = CorsConfiguration()
 
-                    // TODO: 프로퍼티로 분리
-                    corsConfiguration.allowedOrigins = listOf("http://localhost:3000")
+                    corsConfiguration.allowedOrigins = corsProperty.allowedOrigins
                     corsConfiguration.addAllowedHeader("*")
                     corsConfiguration.addAllowedMethod("*")
                     corsConfiguration.allowCredentials = true

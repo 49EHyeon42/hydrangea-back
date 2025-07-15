@@ -28,6 +28,10 @@ spring:
         format_sql: true
     show_sql: true
 
+cors:
+  allowed-origins:
+    - http://localhost:5173
+
 token:
   access-token:
     name: accessToken
