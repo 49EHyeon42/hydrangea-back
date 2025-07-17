@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -47,6 +48,15 @@ class AuthController(
 
             response.addHeader(HttpHeaders.SET_COOKIE, deletedAccessTokenCookie.toString())
         }
+
+        return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/me")
+    fun me(
+        @AuthenticationPrincipal userId: String,
+    ): ResponseEntity<Void> {
+        authService.findUserIdByAccessToken(userId)
 
         return ResponseEntity.ok().build()
     }

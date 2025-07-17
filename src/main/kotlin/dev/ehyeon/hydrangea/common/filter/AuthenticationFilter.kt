@@ -1,6 +1,7 @@
 package dev.ehyeon.hydrangea.common.filter
 
 import dev.ehyeon.hydrangea.common.authentication.token.AuthenticationToken
+import dev.ehyeon.hydrangea.common.exception.InvalidCredentialsException
 import dev.ehyeon.hydrangea.common.property.TokenProperty
 import dev.ehyeon.hydrangea.common.service.AuthService
 import jakarta.servlet.FilterChain
@@ -25,17 +26,21 @@ class AuthenticationFilter(
         val accessToken = cookies?.firstOrNull { it.name == tokenProperty.accessToken.name }?.value
 
         if (!accessToken.isNullOrBlank()) {
-            val userIdAsString = authService.findUserIdByAccessToken(accessToken)
+            val userId = getUserId(accessToken)
 
-            if (userIdAsString != null) {
-                val userIdAsLong = userIdAsString.toLongOrNull()
-
-                if (userIdAsLong != null) {
-                    SecurityContextHolder.getContext().authentication = AuthenticationToken(userIdAsLong)
-                }
+            if (userId != null) {
+                SecurityContextHolder.getContext().authentication = AuthenticationToken(userId)
             }
         }
 
         filterChain.doFilter(request, response)
+    }
+
+    private fun getUserId(accessToken: String): Long? {
+        return try {
+            authService.findUserIdByAccessToken(accessToken).toLongOrNull()
+        } catch (_: InvalidCredentialsException) {
+            null
+        }
     }
 }

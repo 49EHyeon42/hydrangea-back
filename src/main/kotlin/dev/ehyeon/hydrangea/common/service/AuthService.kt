@@ -46,8 +46,8 @@ class AuthService(
         redisTemplate.delete(accessToken)
     }
 
-    fun findUserIdByAccessToken(accessToken: String): String? {
-        return redisTemplate.opsForValue().get(accessToken)
+    fun findUserIdByAccessToken(accessToken: String): String {
+        return redisTemplate.opsForValue().get(accessToken) ?: throw InvalidCredentialsException()
     }
 
     // TODO: AuthService에서 분리
