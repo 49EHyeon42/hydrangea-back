@@ -54,10 +54,8 @@ class AuthController(
 
     @GetMapping("/me")
     fun me(
-        @AuthenticationPrincipal userId: String,
+        @AuthenticationPrincipal userId: Long,
     ): ResponseEntity<Void> {
-        authService.findUserIdByAccessToken(userId)
-
         return ResponseEntity.ok().build()
     }
 
