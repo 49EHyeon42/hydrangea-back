@@ -23,10 +23,15 @@ class MessageController(
         val userId = headerAccessor.sessionAttributes?.get("userId") as? Long
             ?: throw RuntimeException()
 
+        // TODO: custom exception
+        val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
+            ?: throw RuntimeException()
+
+        // TODO: 서비스, 레포 분리
         val saved = messageRepository.save(
             MessageMongoDbDocument(
                 senderId = userId,
-                senderNickname = request.senderNickname,
+                senderNickname = userNickname,
                 content = request.content
             )
         )
