@@ -1,3 +1,7 @@
+server:
+  error:
+    path: /api/error
+
 spring:
   application:
     name: hydrangea

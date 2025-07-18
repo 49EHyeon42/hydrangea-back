@@ -11,7 +11,5 @@ class AuthenticationToken(
 
     override fun getPrincipal(): Long = userId
 
-    init {
-        super.setAuthenticated(true)
-    }
+    override fun isAuthenticated(): Boolean = true
 }

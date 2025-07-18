@@ -45,8 +45,9 @@ class SecurityConfiguration(
             }
             .authorizeHttpRequests { auth ->
                 auth
+                    .requestMatchers("/api/error").permitAll()
+                    .requestMatchers("/api/auth/me").authenticated()
                     .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/tour-api/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
