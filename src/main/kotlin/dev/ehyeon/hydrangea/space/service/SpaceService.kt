@@ -1,11 +1,11 @@
-package dev.ehyeon.hydrangea.message.service
+package dev.ehyeon.hydrangea.space.service
 
-import dev.ehyeon.hydrangea.message.document.MessageMongoDbDocument
-import dev.ehyeon.hydrangea.message.repository.MessageMongoDbRepository
+import dev.ehyeon.hydrangea.space.document.MessageMongoDbDocument
+import dev.ehyeon.hydrangea.space.repository.MessageMongoDbRepository
 import org.springframework.stereotype.Service
 
 @Service
-class MessageService(
+class SpaceService(
     private val messageRepository: MessageMongoDbRepository,
 ) {
     fun saveMessage(senderId: Long, senderNickname: String, content: String): String {

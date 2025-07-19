@@ -1,21 +1,19 @@
-package dev.ehyeon.hydrangea.message.controller
+package dev.ehyeon.hydrangea.space.controller
 
-import dev.ehyeon.hydrangea.message.repository.MessageMongoDbRepository
-import dev.ehyeon.hydrangea.message.request.SendMessageRequest
-import dev.ehyeon.hydrangea.message.response.SendMessageResponse
-import dev.ehyeon.hydrangea.message.service.MessageService
+import dev.ehyeon.hydrangea.space.request.SendMessageRequest
+import dev.ehyeon.hydrangea.space.response.SendMessageResponse
+import dev.ehyeon.hydrangea.space.service.SpaceService
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 
 @Controller
-class MessageController(
+class SpaceController(
     private val messagingTemplate: SimpMessagingTemplate,
-    private val messageService: MessageService,
-    private val messageRepository: MessageMongoDbRepository,
+    private val spaceService: SpaceService,
 ) {
-    @MessageMapping("/message")
+    @MessageMapping("/space/chat")
     fun handleMessage(
         headerAccessor: SimpMessageHeaderAccessor,
         request: SendMessageRequest,
@@ -28,7 +26,7 @@ class MessageController(
         val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
             ?: throw RuntimeException()
 
-        val savedMessageId = messageService.saveMessage(
+        val savedMessageId = spaceService.saveMessage(
             senderId = userId,
             senderNickname = userNickname,
             content = request.content
@@ -36,7 +34,7 @@ class MessageController(
 
         // TODO: destination 분리
         messagingTemplate.convertAndSend(
-            "/topic/message",
+            "/topic/space/chat",
             SendMessageResponse(
                 messageId = savedMessageId,
                 senderId = userId,

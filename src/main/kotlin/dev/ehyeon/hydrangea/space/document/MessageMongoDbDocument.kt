@@ -1,4 +1,4 @@
-package dev.ehyeon.hydrangea.message.document
+package dev.ehyeon.hydrangea.space.document
 
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id

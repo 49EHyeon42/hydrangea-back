@@ -1,4 +1,4 @@
-package dev.ehyeon.hydrangea.message.response
+package dev.ehyeon.hydrangea.space.response
 
 data class SendMessageResponse(
     val messageId: String,

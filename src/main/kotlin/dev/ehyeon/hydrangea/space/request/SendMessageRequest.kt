@@ -1,4 +1,4 @@
-package dev.ehyeon.hydrangea.message.request
+package dev.ehyeon.hydrangea.space.request
 
 // TODO: 유효성 감사
 data class SendMessageRequest(
