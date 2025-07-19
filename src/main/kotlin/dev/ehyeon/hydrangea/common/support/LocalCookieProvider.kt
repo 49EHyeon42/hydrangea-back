@@ -1,13 +1,13 @@
 package dev.ehyeon.hydrangea.common.support
 
-import dev.ehyeon.hydrangea.common.constant.Environment
+import dev.ehyeon.hydrangea.common.constant.EnvironmentConstant
 import dev.ehyeon.hydrangea.common.property.TokenProperty
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseCookie
 import org.springframework.stereotype.Component
 
-@Profile(Environment.LOCAL)
+@Profile(EnvironmentConstant.LOCAL)
 @Component
 class LocalCookieProvider(
     private val tokenProperty: TokenProperty,

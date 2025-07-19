@@ -1,6 +1,6 @@
 package dev.ehyeon.hydrangea.common.configuration
 
-import dev.ehyeon.hydrangea.common.constant.Environment
+import dev.ehyeon.hydrangea.common.constant.EnvironmentConstant
 import dev.ehyeon.hydrangea.common.filter.AuthenticationFilter
 import dev.ehyeon.hydrangea.common.property.CorsProperty
 import org.springframework.context.annotation.Bean
@@ -18,7 +18,7 @@ class SecurityConfiguration(
     private val authenticationFilter: AuthenticationFilter,
 ) {
     @Bean
-    @Profile(Environment.LOCAL)
+    @Profile(EnvironmentConstant.LOCAL)
     fun localFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .cors { cors ->
