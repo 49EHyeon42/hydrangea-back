@@ -19,7 +19,9 @@ class AuthHandshakeInterceptor(
     private val authService: AuthService,
     private val userService: UserService,
 ) : HandshakeInterceptor {
-    private val logger = LoggerFactory.getLogger(this::class.java)
+    companion object {
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
 
     override fun beforeHandshake(
         request: ServerHttpRequest,
@@ -60,7 +62,8 @@ class AuthHandshakeInterceptor(
 
         val userNickname = findUserNickname(userId) ?: return
 
-        logger.info("""
+        logger.info(
+            """
             {
               "event": "WebSocketHandshake",
               "status": "${if (exception == null) "SUCCESS" else "FAILURE"}",
