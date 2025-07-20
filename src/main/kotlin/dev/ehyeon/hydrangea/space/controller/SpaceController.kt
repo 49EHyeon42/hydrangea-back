@@ -19,13 +19,8 @@ class SpaceController(
         headerAccessor: SimpMessageHeaderAccessor,
         request: SendMessageRequest,
     ) {
-        // TODO: custom exception
-        val userId = headerAccessor.sessionAttributes?.get("userId") as? Long
-            ?: throw RuntimeException()
-
-        // TODO: custom exception
-        val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
-            ?: throw RuntimeException()
+        val userId = findUserId(headerAccessor)
+        val userNickname = findUserNickname(headerAccessor)
 
         val savedMessageId = spaceService.saveMessage(
             senderId = userId,
@@ -50,13 +45,8 @@ class SpaceController(
     fun handleJoin(
         headerAccessor: SimpMessageHeaderAccessor,
     ) {
-        // TODO: custom exception
-        val userId = headerAccessor.sessionAttributes?.get("userId") as? Long
-            ?: throw RuntimeException()
-
-        // TODO: custom exception
-        val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
-            ?: throw RuntimeException()
+        val userId = findUserId(headerAccessor)
+        val userNickname = findUserNickname(headerAccessor)
 
         val joinPlayerResponse = JoinPlayerResponse(
             playerId = userId.toString(),
@@ -74,13 +64,8 @@ class SpaceController(
         headerAccessor: SimpMessageHeaderAccessor,
         moveRequest: MoveRequest,
     ) {
-        // TODO: custom exception
-        val userId = headerAccessor.sessionAttributes?.get("userId") as? Long
-            ?: throw RuntimeException()
-
-        // TODO: custom exception
-        val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
-            ?: throw RuntimeException()
+        val userId = findUserId(headerAccessor)
+        val userNickname = findUserNickname(headerAccessor)
 
         val moveResponse = MoveResponse(
             playerId = userId.toString(),
@@ -92,6 +77,20 @@ class SpaceController(
 
         messagingTemplate.convertAndSend("/topic/space/move", moveResponse)
     }
+
+    private fun findUserId(messageHeaderAccessor: SimpMessageHeaderAccessor): Long {
+        // TODO: custom exception
+        return messageHeaderAccessor.sessionAttributes?.get("userId") as? Long
+            ?: throw RuntimeException()
+    }
+
+    private fun findUserNickname(messageHeaderAccessor: SimpMessageHeaderAccessor): String {
+        // TODO: custom exception
+        return messageHeaderAccessor.sessionAttributes?.get("userNickname") as? String
+            ?: throw RuntimeException()
+    }
+
+    // TODO-NOTE: WebSocket Exception 처리는 어떻게 하지
 }
 
 // 요청 DTO
