@@ -43,4 +43,45 @@ class SpaceController(
             )
         )
     }
+
+    // TODO: refactor or fix
+    @MessageMapping("/space/move")
+    fun handleMove(
+        headerAccessor: SimpMessageHeaderAccessor,
+        moveRequest: MoveRequest,
+    ) {
+        // TODO: custom exception
+        val userId = headerAccessor.sessionAttributes?.get("userId") as? Long
+            ?: throw RuntimeException()
+
+        // TODO: custom exception
+        val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
+            ?: throw RuntimeException()
+
+        val moveResponse = MoveResponse(
+            playerId = userId.toString(),
+            x = moveRequest.x,
+            y = moveRequest.y,
+            type = moveRequest.type,
+            username = userNickname
+        )
+
+        messagingTemplate.convertAndSend("/topic/space/move", moveResponse)
+    }
 }
+
+// 요청 DTO
+data class MoveRequest(
+    val x: Double,
+    val y: Double,
+    val type: String // "move", "join", "leave"
+)
+
+// 응답 DTO
+data class MoveResponse(
+    val playerId: String,
+    val x: Double,
+    val y: Double,
+    val type: String,
+    val username: String? = null
+)
