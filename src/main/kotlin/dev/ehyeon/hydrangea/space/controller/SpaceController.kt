@@ -1,7 +1,9 @@
 package dev.ehyeon.hydrangea.space.controller
 
+import dev.ehyeon.hydrangea.space.request.MoveUserRequest
 import dev.ehyeon.hydrangea.space.request.SendMessageRequest
 import dev.ehyeon.hydrangea.space.response.JoinUserResponse
+import dev.ehyeon.hydrangea.space.response.MoveUserResponse
 import dev.ehyeon.hydrangea.space.response.SendMessageResponse
 import dev.ehyeon.hydrangea.space.service.SpaceService
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -32,6 +34,27 @@ class SpaceController(
         messagingTemplate.convertAndSend("/topic/spaces/users/join", joinUserResponse)
     }
 
+    @MessageMapping("/spaces/users/move")
+    fun moveUser(
+        headerAccessor: SimpMessageHeaderAccessor,
+        request: MoveUserRequest,
+    ) {
+        val userId = findUserId(headerAccessor)
+        val userNickname = findUserNickname(headerAccessor)
+
+        val response = MoveUserResponse(
+            userId = userId,
+            userNickname = userNickname,
+            x = request.x,
+            y = request.y,
+        )
+
+        // TODO-NOTE: 전체가 아닌 일부만 보내는 방법 필요
+        messagingTemplate.convertAndSend("/topic/spaces/users/move", response)
+    }
+
+    // TODO: leaveUser
+
     @MessageMapping("/spaces/chat")
     fun handleMessage(
         headerAccessor: SimpMessageHeaderAccessor,
@@ -58,26 +81,6 @@ class SpaceController(
         )
     }
 
-    // TODO: refactor or fix
-    @MessageMapping("/spaces/users/move")
-    fun handleMove(
-        headerAccessor: SimpMessageHeaderAccessor,
-        moveRequest: MoveRequest,
-    ) {
-        val userId = findUserId(headerAccessor)
-        val userNickname = findUserNickname(headerAccessor)
-
-        val moveResponse = MoveResponse(
-            userId = userId,
-            userNickname = userNickname,
-            x = moveRequest.x,
-            y = moveRequest.y,
-        )
-
-        // TODO-NOTE: 전체가 아닌 일부만 보내는 방법 필요
-        messagingTemplate.convertAndSend("/topic/spaces/users/move", moveResponse)
-    }
-
     private fun findUserId(messageHeaderAccessor: SimpMessageHeaderAccessor): Long {
         // TODO: custom exception
         return messageHeaderAccessor.sessionAttributes?.get("userId") as? Long
@@ -92,19 +95,3 @@ class SpaceController(
 
     // TODO-NOTE: WebSocket Exception 처리는 어떻게 하지
 }
-
-// 요청 DTO
-// TODO: 분리, rename
-data class MoveRequest(
-    val x: Double,
-    val y: Double,
-)
-
-// 응답 DTO
-// TODO: 분리, rename
-data class MoveResponse(
-    val userId: Long,
-    val userNickname: String,
-    val x: Double,
-    val y: Double,
-)
