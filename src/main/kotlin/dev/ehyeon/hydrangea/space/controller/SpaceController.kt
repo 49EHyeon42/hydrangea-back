@@ -1,7 +1,7 @@
 package dev.ehyeon.hydrangea.space.controller
 
 import dev.ehyeon.hydrangea.space.request.SendMessageRequest
-import dev.ehyeon.hydrangea.space.response.JoinPlayerResponse
+import dev.ehyeon.hydrangea.space.response.JoinUserResponse
 import dev.ehyeon.hydrangea.space.response.SendMessageResponse
 import dev.ehyeon.hydrangea.space.service.SpaceService
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -14,6 +14,24 @@ class SpaceController(
     private val messagingTemplate: SimpMessagingTemplate,
     private val spaceService: SpaceService,
 ) {
+    @MessageMapping("/spaces/users/join")
+    fun joinUser(
+        messageHeaderAccessor: SimpMessageHeaderAccessor,
+    ) {
+        val userId = findUserId(messageHeaderAccessor)
+        val userNickname = findUserNickname(messageHeaderAccessor)
+
+        // TODO: 나중에 Space DB 만들어서 설정
+        val joinUserResponse = JoinUserResponse(
+            userId = userId,
+            userNickname = userNickname,
+            initialX = 100.0,
+            initialY = 100.0,
+        )
+
+        messagingTemplate.convertAndSend("/topic/spaces/users/join", joinUserResponse)
+    }
+
     @MessageMapping("/space/chat")
     fun handleMessage(
         headerAccessor: SimpMessageHeaderAccessor,
@@ -38,24 +56,6 @@ class SpaceController(
                 content = request.content,
             )
         )
-    }
-
-    // TODO: refactor
-    @MessageMapping("/space/join")
-    fun handleJoin(
-        headerAccessor: SimpMessageHeaderAccessor,
-    ) {
-        val userId = findUserId(headerAccessor)
-        val userNickname = findUserNickname(headerAccessor)
-
-        val joinPlayerResponse = JoinPlayerResponse(
-            playerId = userId.toString(),
-            username = userNickname,
-            x = 100.0,
-            y = 100.0,
-        )
-
-        messagingTemplate.convertAndSend("/topic/space/join", joinPlayerResponse)
     }
 
     // TODO: refactor or fix
