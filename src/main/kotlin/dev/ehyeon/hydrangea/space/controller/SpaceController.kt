@@ -44,6 +44,29 @@ class SpaceController(
         )
     }
 
+    // TODO: refactor
+    @MessageMapping("/space/join")
+    fun handleJoin(
+        headerAccessor: SimpMessageHeaderAccessor,
+    ) {
+        // TODO: custom exception
+        val userId = headerAccessor.sessionAttributes?.get("userId") as? Long
+            ?: throw RuntimeException()
+
+        // TODO: custom exception
+        val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
+            ?: throw RuntimeException()
+
+        val joinResponse = JoinResponse(
+            playerId = userId.toString(),
+            username = userNickname,
+            x = 100.0, // 기본 스폰 위치
+            y = 100.0  // 기본 스폰 위치
+        )
+
+        messagingTemplate.convertAndSend("/topic/space/join", joinResponse)
+    }
+
     // TODO: refactor or fix
     @MessageMapping("/space/move")
     fun handleMove(
@@ -70,11 +93,18 @@ class SpaceController(
     }
 }
 
+data class JoinResponse(
+    val playerId: String,
+    val username: String,
+    val x: Double,
+    val y: Double
+)
+
 // 요청 DTO
 data class MoveRequest(
     val x: Double,
     val y: Double,
-    val type: String // "move", "join", "leave"
+    val type: String, // "move", "leave"
 )
 
 // 응답 DTO
@@ -83,5 +113,5 @@ data class MoveResponse(
     val x: Double,
     val y: Double,
     val type: String,
-    val username: String? = null
+    val username: String? = null,
 )
