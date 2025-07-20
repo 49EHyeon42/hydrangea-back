@@ -32,7 +32,7 @@ class SpaceController(
         messagingTemplate.convertAndSend("/topic/spaces/users/join", joinUserResponse)
     }
 
-    @MessageMapping("/space/chat")
+    @MessageMapping("/spaces/chat")
     fun handleMessage(
         headerAccessor: SimpMessageHeaderAccessor,
         request: SendMessageRequest,
@@ -46,9 +46,9 @@ class SpaceController(
             content = request.content
         )
 
-        // TODO: destination 분리
+        // TODO: destination 분리?
         messagingTemplate.convertAndSend(
-            "/topic/space/chat",
+            "/topic/spaces/chat",
             SendMessageResponse(
                 messageId = savedMessageId,
                 senderId = userId,
@@ -59,7 +59,7 @@ class SpaceController(
     }
 
     // TODO: refactor or fix
-    @MessageMapping("/space/move")
+    @MessageMapping("/spaces/users/move")
     fun handleMove(
         headerAccessor: SimpMessageHeaderAccessor,
         moveRequest: MoveRequest,
@@ -68,14 +68,14 @@ class SpaceController(
         val userNickname = findUserNickname(headerAccessor)
 
         val moveResponse = MoveResponse(
-            playerId = userId.toString(),
+            userId = userId,
+            userNickname = userNickname,
             x = moveRequest.x,
             y = moveRequest.y,
-            type = moveRequest.type,
-            username = userNickname
         )
 
-        messagingTemplate.convertAndSend("/topic/space/move", moveResponse)
+        // TODO-NOTE: 전체가 아닌 일부만 보내는 방법 필요
+        messagingTemplate.convertAndSend("/topic/spaces/users/move", moveResponse)
     }
 
     private fun findUserId(messageHeaderAccessor: SimpMessageHeaderAccessor): Long {
@@ -94,17 +94,17 @@ class SpaceController(
 }
 
 // 요청 DTO
+// TODO: 분리, rename
 data class MoveRequest(
     val x: Double,
     val y: Double,
-    val type: String, // "move", "leave"
 )
 
 // 응답 DTO
+// TODO: 분리, rename
 data class MoveResponse(
-    val playerId: String,
+    val userId: Long,
+    val userNickname: String,
     val x: Double,
     val y: Double,
-    val type: String,
-    val username: String? = null,
 )
