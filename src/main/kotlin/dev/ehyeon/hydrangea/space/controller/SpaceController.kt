@@ -1,6 +1,7 @@
 package dev.ehyeon.hydrangea.space.controller
 
 import dev.ehyeon.hydrangea.space.request.SendMessageRequest
+import dev.ehyeon.hydrangea.space.response.JoinPlayerResponse
 import dev.ehyeon.hydrangea.space.response.SendMessageResponse
 import dev.ehyeon.hydrangea.space.service.SpaceService
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -57,14 +58,14 @@ class SpaceController(
         val userNickname = headerAccessor.sessionAttributes?.get("userNickname") as? String
             ?: throw RuntimeException()
 
-        val joinResponse = JoinResponse(
+        val joinPlayerResponse = JoinPlayerResponse(
             playerId = userId.toString(),
             username = userNickname,
-            x = 100.0, // 기본 스폰 위치
-            y = 100.0  // 기본 스폰 위치
+            x = 100.0,
+            y = 100.0,
         )
 
-        messagingTemplate.convertAndSend("/topic/space/join", joinResponse)
+        messagingTemplate.convertAndSend("/topic/space/join", joinPlayerResponse)
     }
 
     // TODO: refactor or fix
@@ -92,13 +93,6 @@ class SpaceController(
         messagingTemplate.convertAndSend("/topic/space/move", moveResponse)
     }
 }
-
-data class JoinResponse(
-    val playerId: String,
-    val username: String,
-    val x: Double,
-    val y: Double
-)
 
 // 요청 DTO
 data class MoveRequest(
