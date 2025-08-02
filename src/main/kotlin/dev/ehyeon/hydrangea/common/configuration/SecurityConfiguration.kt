@@ -48,6 +48,7 @@ class SecurityConfiguration(
                     .requestMatchers("/api/error").permitAll()
                     .requestMatchers("/api/auth/me").authenticated()
                     .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/advertising/safety-dream/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

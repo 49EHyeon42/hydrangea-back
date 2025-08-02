@@ -36,3 +36,13 @@ token:
   access-token:
     name: accessToken
     expiration-seconds: 86400
+
+# 안전 Dream Open API
+safety-dream-open-api:
+  lcm:
+    # 실종경보 템플릿
+    # https://www.safe182.go.kr/home/api/guide4.do
+    amber-list-t-form:
+      uri: https://www.safe182.go.kr/api/lcm/amberListTForm.do
+      essential-id: ${SAFETY_DREAM_ESSENTIAL_ID}
+      authentication-key: ${SAFETY_DREAM_AUTHENTICATION_KEY}
