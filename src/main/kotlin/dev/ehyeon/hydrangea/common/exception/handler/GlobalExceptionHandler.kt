@@ -6,9 +6,19 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.HandlerMethodValidationException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+    @ExceptionHandler(HandlerMethodValidationException::class)
+    fun handleHandlerMethodValidationException(
+        exception: HandlerMethodValidationException,
+    ): ResponseEntity<BaseResponse<Unit>> {
+        return ResponseEntity
+            .badRequest()
+            .body(BaseResponse.failure(message = exception.message))
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(
         exception: MethodArgumentNotValidException,
